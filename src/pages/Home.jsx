@@ -1,0 +1,657 @@
+import React, { useState, useRef } from 'react'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
+import HeroScene from '../components/HeroScene'
+import SkillsScene from '../components/SkillsScene'
+import ProjectsScene from '../components/ProjectsScene'
+import ContactScene from '../components/ContactScene'
+import { projects } from '../data/projects'
+import { skills, skillCategories } from '../data/skills'
+
+// ─── Reusable section heading ───────────────────────────────────────────────
+function SectionHeading({ label, title, subtitle }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+  return (
+    <div ref={ref} className="text-center mb-12">
+      <motion.p
+        initial={{ opacity: 0, y: 12 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5 }}
+        className="font-mono text-xs text-sky-400 tracking-[0.3em] uppercase mb-3"
+      >
+        {label}
+      </motion.p>
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="font-display font-bold text-4xl md:text-5xl text-white mb-4"
+      >
+        {title}
+      </motion.h2>
+      {subtitle && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-slate-400 max-w-xl mx-auto text-base leading-relaxed"
+        >
+          {subtitle}
+        </motion.p>
+      )}
+    </div>
+  )
+}
+
+// ─── Project Modal ────────────────────────────────────────────────────────────
+function ProjectModal({ project, onClose }) {
+  if (!project) return null
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        {/* Backdrop */}
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+
+        <motion.div
+          initial={{ scale: 0.85, opacity: 0, y: 30 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          className="relative glass rounded-2xl p-8 max-w-lg w-full z-10 overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+          style={{ borderColor: project.color + '30' }}
+        >
+          {/* Glow */}
+          <div
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{ boxShadow: `inset 0 0 60px ${project.glowColor}` }}
+          />
+
+          {/* Header */}
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div
+                className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
+                style={{ background: project.color + '18', border: `1px solid ${project.color}40` }}
+              >
+                {project.icon}
+              </div>
+              <div>
+                <h3 className="font-display font-bold text-2xl text-white">{project.title}</h3>
+                <p className="text-sm font-mono mt-0.5" style={{ color: project.color }}>{project.tagline}</p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Badges */}
+          <div className="flex gap-3 mb-5">
+            <span className="px-3 py-1 rounded-full text-xs font-mono border" style={{ color: project.color, borderColor: project.color + '40', background: project.color + '12' }}>
+              ● {project.status}
+            </span>
+            <span className="px-3 py-1 rounded-full text-xs font-mono border border-slate-700 text-slate-400">
+              {project.year}
+            </span>
+          </div>
+
+          {/* Description */}
+          <p className="text-slate-300 leading-relaxed mb-6 text-sm">{project.description}</p>
+
+          {/* Tech stack */}
+          <div>
+            <p className="text-xs font-mono text-slate-500 uppercase tracking-widest mb-3">Tech Stack</p>
+            <div className="flex flex-wrap gap-2">
+              {project.tech.map((t) => (
+                <span
+                  key={t}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono"
+                  style={{ background: project.color + '15', border: `1px solid ${project.color}30`, color: project.color }}
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+// ─── Hero Section ─────────────────────────────────────────────────────────────
+function HeroSection() {
+  return (
+    <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* 3D scene */}
+      <div className="canvas-container">
+        <HeroScene />
+      </div>
+
+      {/* Overlay content */}
+      <div className="relative z-10 text-center px-6 pointer-events-none select-none">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mb-4"
+        >
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-sky-400/20 text-sky-400 text-xs font-mono tracking-widest uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+            Available for opportunities
+          </span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display font-extrabold text-white leading-none mb-2"
+          style={{ fontSize: 'clamp(3rem, 10vw, 8rem)' }}
+        >
+          <span className="text-glow">Adinath</span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="font-mono text-sky-400/80 text-sm md:text-base tracking-[0.2em] uppercase mb-6"
+        >
+          Software Engineer · Generative AI Developer
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
+          className="text-slate-400 max-w-lg mx-auto text-sm md:text-base leading-relaxed mb-10"
+        >
+          Building intelligent systems at the intersection of{' '}
+          <span className="text-sky-400">large language models</span>,{' '}
+          <span className="text-indigo-400">ML infrastructure</span>, and{' '}
+          <span className="text-emerald-400">developer tooling</span>.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.1 }}
+          className="flex items-center justify-center gap-4 pointer-events-auto"
+        >
+          <button
+            onClick={() => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })}
+            className="px-6 py-3 rounded-xl bg-sky-400/15 border border-sky-400/30 text-sky-400 font-mono text-sm hover:bg-sky-400/25 hover:border-sky-400/50 transition-all duration-300 glow-cyan"
+          >
+            View Projects →
+          </button>
+          <button
+            onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
+            className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-300 font-mono text-sm hover:bg-white/10 transition-all duration-300"
+          >
+            Get in Touch
+          </button>
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <span className="font-mono text-xs text-slate-600 tracking-widest uppercase">Scroll</span>
+        <div className="w-px h-10 bg-gradient-to-b from-sky-400/60 to-transparent animate-pulse" />
+      </motion.div>
+    </section>
+  )
+}
+
+// ─── About Section ─────────────────────────────────────────────────────────────
+function AboutSection() {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
+
+  const stats = [
+    { label: 'Years Experience', value: '3+' },
+    { label: 'Projects Built', value: '20+' },
+    { label: 'AI Models Deployed', value: '10+' },
+    { label: 'Open Source Commits', value: '500+' },
+  ]
+
+  return (
+    <section id="about" className="relative py-28 px-6 overflow-hidden">
+      <div className="orb w-[400px] h-[400px] bg-indigo-500/6 top-1/2 -translate-y-1/2 -right-32" />
+
+      <div className="max-w-6xl mx-auto" ref={ref}>
+        <SectionHeading
+          label="01 — Who I Am"
+          title="About Me"
+          subtitle={null}
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left: avatar + decoration */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex justify-center"
+          >
+            <div className="relative w-64 h-64">
+              {/* Rings */}
+              <div className="absolute inset-0 rounded-full border border-sky-400/20 animate-spin" style={{ animationDuration: '20s' }} />
+              <div className="absolute inset-4 rounded-full border border-indigo-400/15 animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
+
+              {/* Avatar placeholder */}
+              <div className="absolute inset-8 rounded-full glass border border-sky-400/25 flex flex-col items-center justify-center">
+                <div className="text-5xl mb-2">🤖</div>
+                <p className="font-mono text-xs text-sky-400 tracking-widest">SOFTWARE ENGINEER</p>
+              </div>
+
+              {/* Floating tech icons */}
+              {[
+                { icon: '⚙️', angle: 0, label: 'ML' },
+                { icon: '🧠', angle: 72, label: 'AI' },
+                { icon: '⚛️', angle: 144, label: 'React' },
+                { icon: '🐍', angle: 216, label: 'Python' },
+                { icon: '🐳', angle: 288, label: 'Docker' },
+              ].map(({ icon, angle, label }) => {
+                const rad = (angle * Math.PI) / 180
+                const x = 50 + 46 * Math.sin(rad)
+                const y = 50 - 46 * Math.cos(rad)
+                return (
+                  <motion.div
+                    key={label}
+                    className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 glass rounded-xl border border-white/10 flex items-center justify-center text-lg cursor-default"
+                    style={{ left: `${x}%`, top: `${y}%` }}
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{
+                      duration: 2.5 + angle * 0.01,
+                      repeat: Infinity,
+                      delay: angle * 0.01,
+                    }}
+                    whileHover={{ scale: 1.2 }}
+                    title={label}
+                  >
+                    {icon}
+                  </motion.div>
+                )
+              })}
+            </div>
+          </motion.div>
+
+          {/* Right: text */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h3 className="font-display font-bold text-2xl text-white mb-5 leading-snug">
+              Building intelligent systems at the edge of what's possible
+            </h3>
+            <p className="text-slate-400 leading-relaxed mb-4">
+              I'm a software engineer focused on building <span className="text-sky-400">AI systems</span> and <span className="text-sky-400">generative AI applications</span>. My work spans the full stack — from fine-tuning language models and building RAG pipelines to shipping production-grade web applications.
+            </p>
+            <p className="text-slate-400 leading-relaxed mb-8">
+              Interested in <span className="text-indigo-400">large language models</span>, <span className="text-indigo-400">ML infrastructure</span>, and crafting intelligent developer tools that genuinely improve how we build software.
+            </p>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-3">
+              {stats.map(({ label, value }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.3 + i * 0.07 }}
+                  className="glass rounded-xl p-4 border border-white/5"
+                >
+                  <p className="font-display font-bold text-2xl text-sky-400">{value}</p>
+                  <p className="text-xs font-mono text-slate-500 mt-1">{label}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Skills Section ─────────────────────────────────────────────────────────────
+function SkillsSection() {
+  const [activeCategory, setActiveCategory] = useState('All')
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+
+  const filtered = activeCategory === 'All'
+    ? skills
+    : skills.filter((s) => s.category === activeCategory)
+
+  return (
+    <section id="skills" className="relative py-28 px-6 overflow-hidden">
+      <div className="orb w-[500px] h-[500px] bg-sky-500/6 top-1/2 -translate-y-1/2 -left-48" />
+
+      <div className="max-w-6xl mx-auto" ref={ref}>
+        <SectionHeading
+          label="02 — What I Know"
+          title="Skills & Expertise"
+          subtitle="A living sphere of technologies I work with — hover over nodes to explore."
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* 3D Sphere */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.8 }}
+            className="h-[480px] relative"
+          >
+            <SkillsScene skills={filtered} />
+            <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-mono text-slate-600 tracking-widest">
+              DRAG TO ROTATE
+            </p>
+          </motion.div>
+
+          {/* Skills list */}
+          <div>
+            {/* Category filter */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {skillCategories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 ${
+                    activeCategory === cat
+                      ? 'bg-sky-400/20 border border-sky-400/40 text-sky-400'
+                      : 'bg-white/5 border border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="space-y-2 max-h-[380px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
+              {filtered.map((skill, i) => (
+                <motion.div
+                  key={skill.name}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: i * 0.04 }}
+                  className="glass rounded-xl p-3 border border-white/5 group hover:border-sky-400/20 transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-mono text-sm text-slate-300 group-hover:text-white transition-colors">{skill.name}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono text-slate-600">{skill.category}</span>
+                      <span className="font-mono text-xs" style={{ color: skill.color }}>{skill.level}%</span>
+                    </div>
+                  </div>
+                  <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={inView ? { width: `${skill.level}%` } : {}}
+                      transition={{ duration: 0.8, delay: 0.2 + i * 0.04, ease: 'easeOut' }}
+                      className="h-full rounded-full"
+                      style={{ background: `linear-gradient(90deg, ${skill.color}80, ${skill.color})` }}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Projects Section ─────────────────────────────────────────────────────────
+function ProjectsSection({ onSelectProject }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+
+  return (
+    <section id="projects" className="relative py-28 px-6 overflow-hidden">
+      <div className="orb w-[600px] h-[600px] bg-indigo-500/5 bottom-0 right-0" />
+
+      <div className="max-w-6xl mx-auto" ref={ref}>
+        <SectionHeading
+          label="03 — What I've Built"
+          title="Projects"
+          subtitle="Click on a floating card to explore the project details."
+        />
+
+        {/* 3D scene */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 1 }}
+          className="h-[520px] rounded-2xl overflow-hidden border border-white/5 relative"
+        >
+          <ProjectsScene projects={projects} onSelectProject={onSelectProject} />
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-mono text-slate-600 tracking-widest pointer-events-none">
+            CLICK CARDS · AUTO-ROTATING
+          </div>
+        </motion.div>
+
+        {/* Project cards grid (fallback / supplementary) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+          {projects.map((project, i) => (
+            <motion.button
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.2 + i * 0.1 }}
+              onClick={() => onSelectProject(project)}
+              className="glass rounded-xl p-5 border border-white/5 hover:border-sky-400/25 text-left group transition-all duration-300 hover:-translate-y-1"
+              style={{ '--glow': project.glowColor }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">{project.icon}</span>
+                <div>
+                  <h4 className="font-display font-semibold text-white text-sm group-hover:text-sky-400 transition-colors">
+                    {project.title}
+                  </h4>
+                  <p className="text-xs font-mono" style={{ color: project.color }}>{project.tagline}</p>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{project.description}</p>
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {project.tech.slice(0, 3).map((t) => (
+                  <span key={t} className="px-2 py-0.5 rounded text-[10px] font-mono text-slate-400 bg-white/5 border border-white/5">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Contact Section ─────────────────────────────────────────────────────────
+function ContactSection() {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const [sent, setSent] = useState(false)
+  const [form, setForm] = useState({ name: '', email: '', message: '' })
+
+  const socials = [
+    { icon: '🐙', label: 'GitHub', href: 'https://github.com', color: '#e2e8f0' },
+    { icon: '💼', label: 'LinkedIn', href: 'https://linkedin.com', color: '#60a5fa' },
+    { icon: '✉️', label: 'Email', href: 'mailto:adinath@example.com', color: '#38bdf8' },
+  ]
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setSent(true)
+    setTimeout(() => setSent(false), 3000)
+  }
+
+  return (
+    <section id="contact" className="relative py-28 px-6 overflow-hidden">
+      <div className="orb w-[400px] h-[400px] bg-sky-500/8 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto" ref={ref}>
+        <SectionHeading
+          label="04 — Say Hello"
+          title="Get in Touch"
+          subtitle="Have a project or opportunity? I'd love to hear about it."
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* 3D panel */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8 }}
+            className="h-[360px] relative hidden lg:block"
+          >
+            <ContactScene />
+          </motion.div>
+
+          {/* Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.1 }}
+          >
+            {/* Social links */}
+            <div className="flex gap-3 mb-8">
+              {socials.map(({ icon, label, href, color }, i) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.2 + i * 0.08 }}
+                  whileHover={{ scale: 1.08, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="flex items-center gap-2 px-4 py-2.5 glass rounded-xl border border-white/10 hover:border-sky-400/30 transition-all duration-300"
+                >
+                  <span>{icon}</span>
+                  <span className="font-mono text-sm text-slate-400 hover:text-white transition-colors">{label}</span>
+                </motion.a>
+              ))}
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {[
+                { id: 'name', label: 'Name', type: 'text', placeholder: 'Your name' },
+                { id: 'email', label: 'Email', type: 'email', placeholder: 'you@example.com' },
+              ].map(({ id, label, type, placeholder }) => (
+                <div key={id}>
+                  <label className="block text-xs font-mono text-slate-500 mb-1.5 tracking-widest uppercase">
+                    {label}
+                  </label>
+                  <input
+                    type={type}
+                    placeholder={placeholder}
+                    value={form[id]}
+                    onChange={(e) => setForm({ ...form, [id]: e.target.value })}
+                    className="w-full glass rounded-xl px-4 py-3 text-sm text-slate-300 placeholder-slate-600 border border-white/10 focus:border-sky-400/40 focus:outline-none focus:ring-1 focus:ring-sky-400/20 transition-all font-mono"
+                    required
+                  />
+                </div>
+              ))}
+
+              <div>
+                <label className="block text-xs font-mono text-slate-500 mb-1.5 tracking-widest uppercase">
+                  Message
+                </label>
+                <textarea
+                  rows={4}
+                  placeholder="Tell me about your project..."
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  className="w-full glass rounded-xl px-4 py-3 text-sm text-slate-300 placeholder-slate-600 border border-white/10 focus:border-sky-400/40 focus:outline-none focus:ring-1 focus:ring-sky-400/20 transition-all resize-none font-mono"
+                  required
+                />
+              </div>
+
+              <motion.button
+                type="submit"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full py-3.5 rounded-xl font-mono font-medium text-sm transition-all duration-300 relative overflow-hidden"
+                style={{
+                  background: sent
+                    ? 'rgba(52,211,153,0.2)'
+                    : 'rgba(56,189,248,0.15)',
+                  border: sent
+                    ? '1px solid rgba(52,211,153,0.4)'
+                    : '1px solid rgba(56,189,248,0.3)',
+                  color: sent ? '#34d399' : '#38bdf8',
+                }}
+              >
+                {sent ? '✓ Message Sent!' : 'Send Message →'}
+              </motion.button>
+            </form>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Footer ────────────────────────────────────────────────────────────────────
+function Footer() {
+  return (
+    <footer className="border-t border-white/5 py-10 px-6">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center text-white font-bold text-xs">
+            A
+          </div>
+          <span className="font-display font-semibold text-slate-400">Adinath</span>
+        </div>
+        <p className="font-mono text-xs text-slate-600">
+          Built with React + Three.js + Framer Motion ·{' '}
+          <span className="text-sky-400/60">© {new Date().getFullYear()}</span>
+        </p>
+        <div className="flex items-center gap-4">
+          {['GitHub', 'LinkedIn', 'Email'].map((s) => (
+            <a key={s} href="#" className="font-mono text-xs text-slate-600 hover:text-sky-400 transition-colors">
+              {s}
+            </a>
+          ))}
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+// ─── Home page ─────────────────────────────────────────────────────────────────
+export default function Home() {
+  const [selectedProject, setSelectedProject] = useState(null)
+
+  return (
+    <>
+      <HeroSection />
+      <AboutSection />
+      <SkillsSection />
+      <ProjectsSection onSelectProject={setSelectedProject} />
+      <ContactSection />
+      <Footer />
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+    </>
+  )
+}
