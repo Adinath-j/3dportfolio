@@ -1,12 +1,12 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
-import * as Brevo from '@getbrevo/brevo'
+import { TransactionalEmailsApi, SendSmtpEmail } from '@getbrevo/brevo'
 
 const app = express()
 const PORT = process.env.PORT || 4000
 
-const brevoClient = new Brevo.TransactionalEmailsApi()
+const brevoClient = new TransactionalEmailsApi()
 brevoClient.authentications['api-key'].apiKey = process.env.BREVO_API_KEY
 
 app.use(express.json())
@@ -55,18 +55,48 @@ app.post('/api/contact', rateLimit, async (req, res) => {
   const senderEmail = process.env.SENDER_EMAIL
   const receiverEmail = process.env.RECEIVER_EMAIL
 
-  const notificationEmail = new Brevo.SendSmtpEmail()
+  const notificationEmail = new SendSmtpEmail()
   notificationEmail.sender = { name: 'Portfolio Contact', email: senderEmail }
   notificationEmail.to = [{ email: receiverEmail }]
   notificationEmail.replyTo = { email: email.trim(), name: name.trim() }
   notificationEmail.subject = `[Portfolio] ${subject.trim()}`
-  notificationEmail.htmlContent = `<div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;background:#0a0f1e;color:#e2e8f0;border-radius:12px;overflow:hidden;"><div style="background:linear-gradient(135deg,#0ea5e9,#6366f1);padding:24px 32px;"><h1 style="margin:0;font-size:20px;color:#fff;">New Portfolio Message</h1></div><div style="padding:32px;"><p><strong>Name:</strong> ${name.trim()}</p><p><strong>Email:</strong> ${email.trim()}</p><p><strong>Subject:</strong> ${subject.trim()}</p><p><strong>Message:</strong></p><p>${message.trim()}</p><p style="font-size:12px;color:#475569;">Hit Reply to respond directly to ${name.trim()}.</p></div></div>`
+  notificationEmail.htmlContent = `
+    <div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;background:#0a0f1e;color:#e2e8f0;border-radius:12px;overflow:hidden;">
+      <div style="background:linear-gradient(135deg,#0ea5e9,#6366f1);padding:24px 32px;">
+        <h1 style="margin:0;font-size:20px;color:#fff;">New Portfolio Message</h1>
+      </div>
+      <div style="padding:32px;">
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+          <tr><td style="padding:8px 0;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:.1em;width:80px;">Name</td><td style="padding:8px 0;color:#e2e8f0;font-weight:600;">${name.trim()}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:.1em;">Email</td><td style="padding:8px 0;"><a href="mailto:${email.trim()}" style="color:#38bdf8;">${email.trim()}</a></td></tr>
+          <tr><td style="padding:8px 0;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:.1em;">Subject</td><td style="padding:8px 0;color:#e2e8f0;">${subject.trim()}</td></tr>
+        </table>
+        <div style="background:#060c1a;border-left:3px solid #38bdf8;border-radius:4px;padding:20px 24px;">
+          <p style="margin:0;color:#cbd5e1;line-height:1.7;white-space:pre-wrap;">${message.trim()}</p>
+        </div>
+        <p style="margin-top:24px;font-size:12px;color:#475569;">Hit Reply to respond directly to ${name.trim()}.</p>
+      </div>
+    </div>`
 
-  const autoReplyEmail = new Brevo.SendSmtpEmail()
+  const autoReplyEmail = new SendSmtpEmail()
   autoReplyEmail.sender = { name: 'Adinath', email: senderEmail }
   autoReplyEmail.to = [{ email: email.trim(), name: name.trim() }]
   autoReplyEmail.subject = `Re: ${subject.trim()} — Got your message!`
-  autoReplyEmail.htmlContent = `<div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;background:#0a0f1e;color:#e2e8f0;border-radius:12px;overflow:hidden;"><div style="background:linear-gradient(135deg,#0ea5e9,#6366f1);padding:24px 32px;"><h1 style="margin:0;font-size:20px;color:#fff;">Got your message!</h1></div><div style="padding:32px;"><p>Hi <strong>${name.trim()}</strong>,</p><p>Thanks for reaching out! I'll get back to you within <strong style="color:#38bdf8;">24 hours</strong>.</p><p>Cheers,<br/><strong>Adinath</strong></p></div></div>`
+  autoReplyEmail.htmlContent = `
+    <div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;background:#0a0f1e;color:#e2e8f0;border-radius:12px;overflow:hidden;">
+      <div style="background:linear-gradient(135deg,#0ea5e9,#6366f1);padding:24px 32px;">
+        <h1 style="margin:0;font-size:20px;color:#fff;">Got your message!</h1>
+      </div>
+      <div style="padding:32px;">
+        <p style="color:#cbd5e1;line-height:1.7;">Hi <strong>${name.trim()}</strong>,</p>
+        <p style="color:#cbd5e1;line-height:1.7;">Thanks for reaching out! I'll get back to you within <strong style="color:#38bdf8;">24 hours</strong>.</p>
+        <div style="background:#060c1a;border-left:3px solid #6366f1;border-radius:4px;padding:20px 24px;margin:24px 0;">
+          <p style="margin:0 0 8px;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:.1em;">Your message</p>
+          <p style="margin:0;color:#94a3b8;font-size:13px;white-space:pre-wrap;">${message.trim()}</p>
+        </div>
+        <p style="color:#cbd5e1;">Cheers,<br/><strong>Adinath</strong></p>
+      </div>
+    </div>`
 
   try {
     await brevoClient.sendTransacEmail(notificationEmail)
