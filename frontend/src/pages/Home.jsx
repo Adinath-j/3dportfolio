@@ -6,7 +6,7 @@ import ProjectsScene from '../components/ProjectsScene'
 import ContactScene from '../components/ContactScene'
 import { projects } from '../data/projects'
 import { skills, skillCategories } from '../data/skills'
-import { useLazyCanvas } from '../hooks/useLazyCanvas'
+import { useLazyCanvas } from '../hooks/uselazycanvas'
 
 // ─── Reusable section heading ────────────────────────────────────────────────
 function SectionHeading({ label, title, subtitle }) {
