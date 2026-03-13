@@ -20,7 +20,7 @@ function rateLimit(req, res, next) {
   const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown'
   const now = Date.now()
   const windowMs = 10 * 60 * 1000
-  const maxRequests = 10
+  const maxRequests = 3
 
   const entry = rateLimitMap.get(ip) || { count: 0, resetAt: now + windowMs }
   if (now > entry.resetAt) { entry.count = 0; entry.resetAt = now + windowMs }
