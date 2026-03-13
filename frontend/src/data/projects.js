@@ -1,15 +1,15 @@
 export const projects = [
   {
     id: 1,
-    title: 'WoolConnect',
-    tagline: 'Digital Wool Supply Chain',
+    title: 'CottonConnect',
+    tagline: 'Digital Cotton Supply Chain',
     description:
-      'A digital platform modernizing the wool supply chain by connecting farmers, buyers, inspectors, warehouses, and processors. Streamlines operations from farm to factory with real-time tracking and transparent marketplace.',
+      'A digital platform modernizing the Cotton supply chain by connecting farmers, buyers, inspectors, warehouses, and processors. Streamlines operations from farm to factory with real-time tracking and transparent marketplace.',
     tech: ['React', 'Node.js', 'MongoDB'],
     color: '#38bdf8',
     glowColor: 'rgba(56,189,248,0.35)',
     icon: '🌿',
-    status: 'Production',
+    status: 'Planning',
     year: '2024',
   },
   {
@@ -22,7 +22,7 @@ export const projects = [
     color: '#34d399',
     glowColor: 'rgba(52,211,153,0.35)',
     icon: '🌾',
-    status: 'Active',
+    status: 'Production',
     year: '2024',
   },
   {

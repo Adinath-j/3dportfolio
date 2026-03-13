@@ -165,7 +165,7 @@ function HeroSection() {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="font-mono text-sky-400/80 text-xs sm:text-sm md:text-base tracking-[0.12em] sm:tracking-[0.2em] uppercase mb-5 sm:mb-6"
         >
-          Software Engineer · Generative AI Developer
+          Software Engineer · Future Generative AI Developer
         </motion.p>
 
         <motion.p
@@ -576,9 +576,9 @@ function ContactSection() {
     'block text-[10px] sm:text-xs font-mono text-slate-500 mb-1.5 tracking-widest uppercase'
 
   const socials = [
-    { icon: '🐙', label: 'GitHub',   href: 'https://github.com',   color: '#e2e8f0' },
-    { icon: '💼', label: 'LinkedIn', href: 'https://linkedin.com', color: '#60a5fa' },
-    { icon: '✉️', label: 'Email',    href: 'mailto:adinath@example.com', color: '#38bdf8' },
+    { icon: '🐙', label: 'GitHub',   href: 'https://github.com/adinath-j',   color: '#e2e8f0' },
+    { icon: '💼', label: 'LinkedIn', href: 'https://www.linkedin.com/in/adinath-jadhav/', color: '#60a5fa' },
+    { icon: '✉️', label: 'Email',    href: 'mailto:adinath0632@example.com', color: '#38bdf8' },
   ]
 
   return (

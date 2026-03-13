@@ -96,7 +96,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2 shrink-0">
           {/* Available badge — desktop only */}
           <motion.a
-            href="mailto:adinath@example.com"
+            href="mailto:adinath0632@example.com"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
             className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-lg bg-sky-400/10 border border-sky-400/25 text-sky-400 text-sm font-mono font-medium hover:bg-sky-400/20 transition-colors whitespace-nowrap"
@@ -157,7 +157,7 @@ export default function Navbar() {
               ))}
               <li className="pt-2 border-t border-white/5 mt-1">
                 <a
-                  href="mailto:adinath@example.com"
+                  href="mailto:adinath0632@example.com"
                   className="flex items-center gap-2 px-4 py-3 rounded-xl text-sky-400 font-mono text-base bg-sky-400/10 border border-sky-400/20"
                 >
                   <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
