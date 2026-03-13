@@ -10,9 +10,11 @@ const PORT = process.env.PORT || 4000
 app.use(express.json())
 app.use(cors({
   origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
-  methods: ['POST', 'GET'],
+  methods: ['POST', 'GET', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
 }))
 
+app.options('*', cors()) // handle preflight requests
 // ── Simple in-memory rate limiter ─────────────────────────────────────────────
 const rateLimitMap = new Map()
 
