@@ -6,7 +6,7 @@ import ProjectsScene from '../components/ProjectsScene'
 import ContactScene from '../components/ContactScene'
 import { projects } from '../data/projects'
 import { skills, skillCategories } from '../data/skills'
-import { useLazyCanvas } from "../hooks/Uselazycanvas";
+import { useLazyCanvas } from '../hooks/useLazyCanvas'
 
 // ─── Reusable section heading ────────────────────────────────────────────────
 function SectionHeading({ label, title, subtitle }) {
@@ -515,24 +515,75 @@ function ProjectsSection({ onSelectProject }) {
 function ContactSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
-  const [sent, setSent] = useState(false)
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
   const { wrapperRef: canvasWrapperRef, shouldRender: canvasShouldRender } = useLazyCanvas('200px')
 
-  const socials = [
-    { icon: '🐙', label: 'GitHub', href: 'https://github.com', color: '#e2e8f0' },
-    { icon: '💼', label: 'LinkedIn', href: 'https://linkedin.com', color: '#60a5fa' },
-    { icon: '✉️', label: 'Email', href: 'mailto:adinath0632@gmail.com', color: '#38bdf8' },
-  ]
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+  const [status, setStatus] = useState('idle') // idle | sending | success | error
+  const [errorMsg, setErrorMsg] = useState('')
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setSent(true)
-    setTimeout(() => setSent(false), 3000)
+  // Point to your Express server
+  // In production replace with your deployed server URL e.g. https://api.yourdomain.com
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+
+  const handleChange = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('sending')
+    setErrorMsg('')
+
+    // Client-side validation before hitting the server
+    if (!form.name.trim() || !form.email.trim() || !form.subject.trim() || !form.message.trim()) {
+      setStatus('error')
+      setErrorMsg('Please fill in all fields.')
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(form.email)) {
+      setStatus('error')
+      setErrorMsg('Please enter a valid email address.')
+      return
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || 'Something went wrong.')
+      }
+
+      setStatus('success')
+      setForm({ name: '', email: '', subject: '', message: '' })
+    } catch (err) {
+      setStatus('error')
+      setErrorMsg(err.message || 'Failed to send. Please try again.')
+    }
+  }
+
+  const inputClass =
+    'w-full glass rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-600 border border-white/10 focus:border-sky-400/50 focus:outline-none focus:ring-1 focus:ring-sky-400/20 transition-all duration-200 font-mono bg-transparent'
+
+  const labelClass =
+    'block text-[10px] sm:text-xs font-mono text-slate-500 mb-1.5 tracking-widest uppercase'
+
+  const socials = [
+    { icon: '🐙', label: 'GitHub',   href: 'https://github.com',   color: '#e2e8f0' },
+    { icon: '💼', label: 'LinkedIn', href: 'https://linkedin.com', color: '#60a5fa' },
+    { icon: '✉️', label: 'Email',    href: 'mailto:adinath@example.com', color: '#38bdf8' },
+  ]
 
   return (
     <section id="contact" className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden w-full">
+      {/* Background orb */}
       <div
         className="orb pointer-events-none absolute"
         style={{
@@ -549,104 +600,217 @@ function ContactSection() {
         <SectionHeading
           label="04 — Say Hello"
           title="Get in Touch"
-          subtitle="Have a project or opportunity? I'd love to hear about it."
+          subtitle="Have a project, opportunity, or just want to say hi? Drop me a message."
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-          {/* 3D panel — desktop only, lazy mounted */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start">
+
+          {/* ── Left: 3D panel + info ──────────────────────────────────────── */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
-            ref={canvasWrapperRef}
-            className="canvas-section h-[280px] sm:h-[340px] relative hidden lg:block rounded-2xl overflow-hidden"
+            className="flex flex-col gap-6"
           >
-            {canvasShouldRender ? (
-              <ContactScene />
-            ) : (
-              <div className="w-full h-full bg-[#030712] rounded-2xl flex items-center justify-center">
-                <div className="w-8 h-8 rounded-full border-2 border-sky-400/30 border-t-sky-400 animate-spin" />
+            {/* 3D canvas — desktop + tablet */}
+            <div
+              ref={canvasWrapperRef}
+              className="canvas-section h-[220px] sm:h-[280px] rounded-2xl overflow-hidden border border-white/5"
+            >
+              {canvasShouldRender ? (
+                <ContactScene />
+              ) : (
+                <div className="w-full h-full bg-[#030712] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full border-2 border-sky-400/30 border-t-sky-400 animate-spin" />
+                </div>
+              )}
+            </div>
+
+            {/* Social links */}
+            <div>
+              <p className="text-[10px] sm:text-xs font-mono text-slate-500 uppercase tracking-widest mb-3">
+                Find me on
+              </p>
+              <div className="flex flex-wrap gap-2 sm:gap-3">
+                {socials.map(({ icon, label, href }, i) => (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.3 + i * 0.08 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.96 }}
+                    className="flex items-center gap-2 px-4 py-2.5 glass rounded-xl border border-white/10 hover:border-sky-400/30 transition-all duration-300"
+                  >
+                    <span className="text-base">{icon}</span>
+                    <span className="font-mono text-sm text-slate-300 hover:text-white transition-colors">{label}</span>
+                  </motion.a>
+                ))}
               </div>
-            )}
+            </div>
+
+            {/* Quick info */}
+            <div className="glass rounded-xl p-4 border border-white/5 space-y-3">
+              {[
+                { icon: '📍', label: 'Location',     value: 'India' },
+                { icon: '⏱️', label: 'Response time', value: 'Within 24 hours' },
+                { icon: '💼', label: 'Status',        value: 'Open to opportunities' },
+              ].map(({ icon, label, value }) => (
+                <div key={label} className="flex items-center gap-3">
+                  <span className="text-lg w-6 text-center">{icon}</span>
+                  <div>
+                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{label}</p>
+                    <p className="text-sm font-mono text-slate-300">{value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
-          {/* Form */}
+          {/* ── Right: Form ───────────────────────────────────────────────── */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="w-full min-w-0"
           >
-            {/* Social links */}
-            <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
-              {socials.map(({ icon, label, href }, i) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.2 + i * 0.08 }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 glass rounded-xl border border-white/10 hover:border-sky-400/30 transition-all duration-300"
-                >
-                  <span className="text-base">{icon}</span>
-                  <span className="font-mono text-xs sm:text-sm text-slate-400 hover:text-white transition-colors">{label}</span>
-                </motion.a>
-              ))}
-            </div>
+            <div className="glass rounded-2xl p-6 sm:p-8 border border-white/5">
+              <h3 className="font-display font-bold text-xl text-white mb-1">Send a Message</h3>
+              <p className="font-mono text-xs text-slate-500 mb-6">All fields are required</p>
 
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-              {[
-                { id: 'name', label: 'Name', type: 'text', placeholder: 'Your name' },
-                { id: 'email', label: 'Email', type: 'email', placeholder: 'you@example.com' },
-              ].map(({ id, label, type, placeholder }) => (
-                <div key={id}>
-                  <label className="block text-[10px] sm:text-xs font-mono text-slate-500 mb-1.5 tracking-widest uppercase">
-                    {label}
-                  </label>
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+
+                {/* Name + Email row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name" className={labelClass}>Name</label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder="Your name"
+                      value={form.name}
+                      onChange={handleChange}
+                      disabled={status === 'sending'}
+                      className={inputClass}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className={labelClass}>Email</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={form.email}
+                      onChange={handleChange}
+                      disabled={status === 'sending'}
+                      className={inputClass}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Subject */}
+                <div>
+                  <label htmlFor="subject" className={labelClass}>Subject</label>
                   <input
-                    type={type}
-                    placeholder={placeholder}
-                    value={form[id]}
-                    onChange={(e) => setForm({ ...form, [id]: e.target.value })}
-                    className="w-full glass rounded-xl px-4 py-3 text-sm text-slate-300 placeholder-slate-600 border border-white/10 focus:border-sky-400/40 focus:outline-none focus:ring-1 focus:ring-sky-400/20 transition-all font-mono"
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    placeholder="What's this about?"
+                    value={form.subject}
+                    onChange={handleChange}
+                    disabled={status === 'sending'}
+                    className={inputClass}
                     required
                   />
                 </div>
-              ))}
 
-              <div>
-                <label className="block text-[10px] sm:text-xs font-mono text-slate-500 mb-1.5 tracking-widest uppercase">
-                  Message
-                </label>
-                <textarea
-                  rows={4}
-                  placeholder="Tell me about your project..."
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full glass rounded-xl px-4 py-3 text-sm text-slate-300 placeholder-slate-600 border border-white/10 focus:border-sky-400/40 focus:outline-none focus:ring-1 focus:ring-sky-400/20 transition-all resize-none font-mono"
-                  required
-                />
-              </div>
+                {/* Message */}
+                <div>
+                  <label htmlFor="message" className={labelClass}>Message</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={5}
+                    placeholder="Tell me about your project, idea, or opportunity..."
+                    value={form.message}
+                    onChange={handleChange}
+                    disabled={status === 'sending'}
+                    className={`${inputClass} resize-none`}
+                    required
+                  />
+                  {/* Character count */}
+                  <p className="text-right font-mono text-[10px] text-slate-600 mt-1">
+                    {form.message.length} / 1000
+                  </p>
+                </div>
 
-              <motion.button
-                type="submit"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 rounded-xl font-mono font-medium text-sm transition-all duration-300"
-                style={{
-                  background: sent ? 'rgba(52,211,153,0.2)' : 'rgba(56,189,248,0.15)',
-                  border: sent ? '1px solid rgba(52,211,153,0.4)' : '1px solid rgba(56,189,248,0.3)',
-                  color: sent ? '#34d399' : '#38bdf8',
-                }}
-              >
-                {sent ? '✓ Message Sent!' : 'Send Message →'}
-              </motion.button>
-            </form>
+                {/* Error message */}
+                <AnimatePresence>
+                  {status === 'error' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/25 text-red-400 text-sm font-mono"
+                    >
+                      <span>⚠</span>
+                      <span>{errorMsg}</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Submit button */}
+                <motion.button
+                  type="submit"
+                  disabled={status === 'sending' || status === 'success'}
+                  whileHover={status === 'idle' || status === 'error' ? { scale: 1.02 } : {}}
+                  whileTap={status === 'idle' || status === 'error' ? { scale: 0.97 } : {}}
+                  className="w-full py-4 rounded-xl font-mono font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+                  style={
+                    status === 'success'
+                      ? { background: 'rgba(52,211,153,0.15)', border: '1px solid rgba(52,211,153,0.35)', color: '#34d399' }
+                      : status === 'error'
+                      ? { background: 'rgba(248,113,113,0.10)', border: '1px solid rgba(248,113,113,0.30)', color: '#f87171' }
+                      : status === 'sending'
+                      ? { background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.20)', color: '#38bdf8', opacity: 0.7 }
+                      : { background: 'rgba(56,189,248,0.12)', border: '1px solid rgba(56,189,248,0.30)', color: '#38bdf8' }
+                  }
+                >
+                  {status === 'sending' && (
+                    <span className="w-4 h-4 rounded-full border-2 border-sky-400/30 border-t-sky-400 animate-spin" />
+                  )}
+                  {status === 'idle'    && 'Send Message →'}
+                  {status === 'sending' && 'Sending...'}
+                  {status === 'success' && '✓ Message Sent!'}
+                  {status === 'error'   && 'Try Again →'}
+                </motion.button>
+
+                {/* Reset after success */}
+                <AnimatePresence>
+                  {status === 'success' && (
+                    <motion.button
+                      type="button"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setStatus('idle')}
+                      className="w-full py-2 font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                    >
+                      Send another message
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+              </form>
+            </div>
           </motion.div>
+
         </div>
       </div>
     </section>
@@ -665,7 +829,7 @@ function Footer() {
           <span className="font-display font-semibold text-slate-400">Adinath</span>
         </div>
         <p className="font-mono text-xs text-slate-600">
-          Built with ❤️ using React + Three.js + Framer Motion ·{' '}
+          Built with React + Three.js + Framer Motion ·{' '}
           <span className="text-sky-400/60">© {new Date().getFullYear()}</span>
         </p>
         <div className="flex items-center gap-4">
