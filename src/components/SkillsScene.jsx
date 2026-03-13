@@ -7,10 +7,12 @@ export default function SkillsScene({ skills }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 7], fov: 55 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       dpr={[1, 1.5]}
+      frameloop="always"
+      style={{ background: '#030712' }}
     >
-      <color attach="background" args={['transparent']} />
+      <color attach="background" args={['#030712']} />
       <ambientLight intensity={0.2} />
       <pointLight color="#38bdf8" intensity={2} position={[4, 4, 4]} />
       <pointLight color="#818cf8" intensity={1} position={[-4, -3, 2]} />

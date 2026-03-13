@@ -83,10 +83,11 @@ export default function ContactScene() {
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 50 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       dpr={[1, 1.5]}
+      style={{ background: '#030712' }}
     >
-      <color attach="background" args={['transparent']} />
+      <color attach="background" args={['#030712']} />
       <ambientLight intensity={0.2} />
 
       <Suspense fallback={null}>

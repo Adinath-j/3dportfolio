@@ -7,10 +7,11 @@ export default function ProjectsScene({ projects, onSelectProject }) {
   return (
     <Canvas
       camera={{ position: [0, 1.5, 10], fov: 55 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       dpr={[1, 1.5]}
+      style={{ background: '#030712' }}
     >
-      <color attach="background" args={['transparent']} />
+      <color attach="background" args={['#030712']} />
       <ambientLight intensity={0.15} />
       <pointLight color="#38bdf8" intensity={1.5} position={[5, 5, 5]} />
       <pointLight color="#818cf8" intensity={1} position={[-5, -3, 3]} />

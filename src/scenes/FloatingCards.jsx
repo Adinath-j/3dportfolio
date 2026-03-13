@@ -13,18 +13,20 @@ function ProjectCard({ project, index, total, onSelect }) {
   const baseX = Math.sin(angle) * radius
   const baseZ = Math.cos(angle) * radius
 
+  const targetScale = useRef(new THREE.Vector3(1, 1, 1))
+
   useFrame((state, delta) => {
     time.current += delta * 0.4
     if (groupRef.current) {
       groupRef.current.position.y = Math.sin(time.current + index) * 0.25
-      groupRef.current.rotation.y += (hovered ? 0.01 : 0.003)
+      groupRef.current.rotation.y += hovered ? 0.01 : 0.003
 
-      const targetScale = hovered ? 1.08 : 1
-      groupRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1)
+      targetScale.current.setScalar(hovered ? 1.08 : 1)
+      groupRef.current.scale.lerp(targetScale.current, 0.1)
     }
   })
 
-  const color = new THREE.Color(project.color)
+  const accentColor = new THREE.Color(project.color)
 
   return (
     <group
@@ -40,7 +42,7 @@ function ProjectCard({ project, index, total, onSelect }) {
           color={hovered ? '#0a0f1e' : '#060c1a'}
           metalness={0.3}
           roughness={0.7}
-          emissive={color}
+          emissive={accentColor}
           emissiveIntensity={hovered ? 0.15 : 0.04}
           transparent
           opacity={0.92}
@@ -70,7 +72,6 @@ function ProjectCard({ project, index, total, onSelect }) {
         color="#e2e8f0"
         anchorX="left"
         anchorY="middle"
-        font="https://fonts.gstatic.com/s/syne/v22/8vIS7w4qzmVxsWxjBZRjr0FKM_04uQ.woff2"
         maxWidth={1.5}
       >
         {project.title}
@@ -95,7 +96,13 @@ function ProjectCard({ project, index, total, onSelect }) {
             <planeGeometry args={[0.62, 0.18]} />
             <meshBasicMaterial color={project.color} transparent opacity={0.12} />
           </mesh>
-          <Text fontSize={0.07} color={project.color} anchorX="center" anchorY="middle" position={[0, 0, 0.01]}>
+          <Text
+            fontSize={0.07}
+            color={project.color}
+            anchorX="center"
+            anchorY="middle"
+            position={[0, 0, 0.01]}
+          >
             {t}
           </Text>
         </group>
@@ -109,7 +116,7 @@ function ProjectCard({ project, index, total, onSelect }) {
         anchorX="right"
         anchorY="middle"
       >
-        ● {project.status}
+        {`• ${project.status}`}
       </Text>
 
       {/* Hover glow */}
