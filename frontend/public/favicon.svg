@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <style>
+      rect.bg { fill: #EEEDFE; }
+      line.a, path.a { stroke: #26215C; }
+      line.j, path.j { stroke: #534AB7; }
+      @media (prefers-color-scheme: dark) {
+        rect.bg { fill: #26215C; }
+        line.a, path.a { stroke: #EEEDFE; }
+        line.j, path.j { stroke: #AFA9EC; }
+      }
+    </style>
+  </defs>
+  <!-- Rounded square background -->
+  <rect class="bg" x="0" y="0" width="32" height="32" rx="7"/>
+  <!-- A: left diagonal -->
+  <line class="a" x1="4" y1="27" x2="10" y2="4" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- A: right diagonal -->
+  <line class="a" x1="10" y1="4" x2="16" y2="25" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- A: crossbar -->
+  <line class="a" x1="6" y1="18" x2="14" y2="18" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- J: top bar -->
+  <line class="j" x1="15" y1="4" x2="27" y2="4" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- J: vertical stem -->
+  <line class="j" x1="25" y1="4" x2="25" y2="23" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- J: bottom curve -->
+  <path class="j" d="M25 23 Q25 29 19 29 Q14 29 13 25" fill="none" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
