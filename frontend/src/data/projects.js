@@ -1,4 +1,50 @@
 export const projects = [
+  
+  {
+    id: 4,
+    title: 'KisanLog',
+    tagline: 'Farm Expense & Profitability Tracker',
+    description:
+      'A comprehensive farm expense tracking and profitability analysis system for Indian farmers. Supports Kharif, Rabi, and Zaid seasonal data with JWT auth, RESTful APIs, Chart.js dashboards, and PDF/CSV export.',
+    tech: ['Node.js', 'Express.js', 'MongoDB', 'JWT', 'Chart.js', 'jsPDF'],
+    color: '#34d399',
+    glowColor: 'rgba(52,211,153,0.35)',
+    icon: '🌾',
+    status: 'Active',
+    year: '2024',
+    github: 'https://github.com/Adinath-j/KisanLogWBackend',
+    live: 'https://YOUR-KISANLOG-LIVE-LINK.com',
+  },
+  {
+    id: 5,
+    title: 'Clarify',
+    tagline: 'Offline-First Productivity App',
+    description:
+      'An offline-first React Native productivity app for structured daily planning — tasks, financial todos, and personal notes in one place. Zustand for state, Supabase for cloud sync, with a roadmap for ML-driven insights.',
+    tech: ['React Native', 'Expo', 'Zustand', 'Supabase', 'Expo Router'],
+    color: '#818cf8',
+    glowColor: 'rgba(129,140,248,0.35)',
+    icon: '📋',
+    status: 'In Progress',
+    year: '2024',
+    github: 'https://github.com/Adinath-j/YOUR-CLARIFY-REPO',
+    live: null,
+  },
+  {
+    id: 6,
+    title: 'Employee Task Manager',
+    tagline: 'Role-Based Task Management SPA',
+    description:
+      'A role-based SPA with Admin and Employee dashboards. Admin assigns tasks while employees track status through a New → Accepted → Completed/Failed lifecycle. Built with React Context API and TailwindCSS.',
+    tech: ['React', 'Vite', 'Context API', 'TailwindCSS'],
+    color: '#38bdf8',
+    glowColor: 'rgba(56,189,248,0.35)',
+    icon: '👥',
+    status: 'Complete',
+    year: '2024',
+    github: 'https://github.com/Adinath-j/YOUR-EMS-REPO',
+    live: 'https://YOUR-EMS-LIVE-LINK.com',
+  },
   {
     id: 1,
     title: 'CottonConnect',
@@ -38,4 +84,5 @@ export const projects = [
     status: 'Research',
     year: '2025',
   },
+
 ]

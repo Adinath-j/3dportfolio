@@ -7,14 +7,14 @@ import { projects } from '../data/projects'
 const resume = {
   name: 'Adinath Jadhav',
   pronouns: 'He/Him',
-  title: 'Data Science Undergrad • MERN Developer',
+  title: 'Data Science Undergrad • MERN & React Native Developer',
   location: 'Karvir, Maharashtra, India',
   email: 'adinath0632@gmail.com',
   github: 'Adinath-j',
   linkedin: 'jadhav-adinath2003',
 
   summary:
-    'Data Science undergrad with hands-on experience in full-stack web development, AI-driven projects, and open-source collaboration. Skilled in the MERN stack, React-based UI design, and building developer-centric tools. Passionate about merging AI and web technologies to create impactful digital solutions.',
+    'Data Science undergrad with hands-on experience in full-stack web development, mobile app development, and open-source collaboration. Skilled in the MERN stack, React Native, and building developer-centric tools. Passionate about merging AI and web technologies to create impactful digital solutions for real-world problems.',
 
   experience: [
     {
@@ -34,7 +34,7 @@ const resume = {
       degree: 'Bachelor of Technology (B.Tech) in Data Science',
       institute: "D. Y. Patil Pratishthan's College of Engineering, Kolhapur",
       period: '2023 – 2027',
-      detail: 'Coursework: Engineering, MERN Stack, Data Science',
+      detail: 'Coursework: MERN Stack, Data Science, Machine Learning',
     },
     {
       degree: 'HSC, PCMB',
@@ -57,9 +57,10 @@ const resume = {
   ],
 
   skills: {
-    Languages: ['C', 'JavaScript', 'HTML', 'CSS'],
-    'Frameworks & Tools': ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Postman', 'Git'],
-    'Soft Skills': ['Communication', 'Collaboration', 'Continuous Learning'],
+    Languages: ['C', 'JavaScript', 'HTML', 'CSS', 'Python'],
+    'Frameworks & Libraries': ['React.js', 'React Native', 'Node.js', 'Express.js', 'TailwindCSS'],
+    'State / Databases': ['Context API', 'Zustand', 'MongoDB', 'PostgreSQL', 'Supabase'],
+    'Tools & Platforms': ['Git', 'Docker', 'Postman', 'Expo', 'Vite', 'VS Code'],
   },
 }
 
@@ -252,9 +253,22 @@ export default function Resume() {
                         <p className="font-mono text-xs" style={{ color: project.color }}>{project.tagline}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 ml-8 sm:ml-0">
+                    <div className="flex items-center gap-2 ml-8 sm:ml-0 flex-wrap">
                       <Tag color={project.color}>{project.status}</Tag>
                       <span className="font-mono text-xs text-slate-600">{project.year}</span>
+                      {project.github && (
+                        <a href={project.github} target="_blank" rel="noopener noreferrer"
+                          className="font-mono text-[10px] px-2 py-1 rounded-md border border-white/10 text-slate-400 hover:text-white hover:border-white/20 transition-colors">
+                          GitHub ↗
+                        </a>
+                      )}
+                      {project.live && (
+                        <a href={project.live} target="_blank" rel="noopener noreferrer"
+                          className="font-mono text-[10px] px-2 py-1 rounded-md border transition-colors"
+                          style={{ color: project.color, borderColor: `${project.color}40`, background: `${project.color}10` }}>
+                          Live ↗
+                        </a>
+                      )}
                     </div>
                   </div>
                   <p className="font-mono text-xs text-slate-400 leading-relaxed mb-3 ml-8">
