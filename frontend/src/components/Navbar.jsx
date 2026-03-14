@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 const links = [
   { label: 'Home', href: '#hero' },
@@ -55,8 +56,8 @@ export default function Navbar() {
           className="flex items-center gap-2 shrink-0"
         >
           
-          <span className="font-display font-bold text-white text-base sm:text-lg tracking-tight">
-            Adinath
+          <span className="font-display font-bold text-white text-base sm:text-lg tracking-tighter">
+            Adinath Jadhav
           </span>
         </motion.button>
 
@@ -71,7 +72,7 @@ export default function Navbar() {
             >
               <button
                 onClick={() => handleNav(link.href, link.label)}
-                className={`relative px-4 py-2.5 text-sm font-medium font-mono transition-colors duration-200 rounded-lg min-w-[70px] ${
+                className={`relative px-4 py-2.5 text-sm font-medium font-mono transition-colors duration-200 rounded-lg min-w- [70px] ${
                   active === link.label
                     ? 'text-sky-400'
                     : 'text-slate-300 hover:text-white'
@@ -93,12 +94,21 @@ export default function Navbar() {
         {/* Desktop CTA + Mobile toggle group */}
         <div className="flex items-center gap-2 shrink-0">
           {/* Available badge — desktop only */}
+          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="hidden md:block">
+            <Link
+              to="/resume"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-indigo-400/30 bg-indigo-400/10 text-indigo-400 text-sm font-mono font-medium hover:bg-indigo-400/20 transition-colors whitespace-nowrap"
+            >
+              📄 Resume
+            </Link>
+          </motion.div> 
           <motion.a
             href="mailto:adinath0632@gmail.com"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
             className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-lg bg-sky-400/10 border border-sky-400/25 text-sky-400 text-sm font-mono font-medium hover:bg-sky-400/20 transition-colors whitespace-nowrap"
           >
+            
             <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
             Available
           </motion.a>
@@ -158,6 +168,15 @@ export default function Navbar() {
                   href="mailto:adinath0632@example.com"
                   className="flex items-center gap-2 px-4 py-3 rounded-xl text-sky-400 font-mono text-base bg-sky-400/10 border border-sky-400/20"
                 >
+                  <li>
+                <Link
+                  to="/resume"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-indigo-400 font-mono text-base bg-indigo-400/10 border border-indigo-400/20"
+                >
+                  📄 Resume
+                </Link>
+              </li>
                   <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
                   Available for work
                 </a>

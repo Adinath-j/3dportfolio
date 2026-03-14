@@ -7,6 +7,7 @@ import ContactScene from '../components/ContactScene'
 import { projects } from '../data/projects'
 import { skills, skillCategories } from '../data/skills'
 import { useLazyCanvas } from '../hooks/uselazycanvas'
+import { Link } from 'react-router-dom'
 
 // ─── Reusable section heading ────────────────────────────────────────────────
 function SectionHeading({ label, title, subtitle }) {
@@ -198,6 +199,14 @@ function HeroSection() {
           >
             Get in Touch
           </button>
+          
+          {/* ADD THIS ↓ */}
+          <Link
+            to="/resume"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-indigo-400/10 border border-indigo-400/30 text-indigo-400 font-mono text-sm font-semibold hover:bg-indigo-400/20 hover:border-indigo-400/50 transition-all duration-300 text-center"
+          >
+            📄 Resume
+          </Link>
         </motion.div>
       </div>
 
@@ -823,10 +832,7 @@ function Footer() {
     <footer className="border-t border-white/5 py-8 sm:py-10 px-4 sm:px-6 w-full">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center text-white font-bold text-xs">
-            A
-          </div>
-          <span className="font-display font-semibold text-slate-400">Adinath</span>
+          <span className="font-display font-semibold text-slate-400">Adinath Jadhav</span>
         </div>
         <p className="font-mono text-xs text-slate-600">
           Built with React + Three.js + Framer Motion ·{' '}

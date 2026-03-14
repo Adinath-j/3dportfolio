@@ -1,11 +1,13 @@
 import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
+import Resume from './pages/Resume'
 
-export default function App() {
+function HomeLayout() {
   return (
     <div className="relative min-h-screen w-full bg-[#030712] overflow-x-hidden noise">
-      {/* Global ambient orbs — clamped so they never push layout */}
+      {/* Global ambient orbs */}
       <div
         className="orb pointer-events-none"
         style={{
@@ -27,9 +29,19 @@ export default function App() {
           right: '-10%',
         }}
       />
-
       <Navbar />
       <Home />
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomeLayout />} />
+        <Route path="/resume" element={<Resume />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
