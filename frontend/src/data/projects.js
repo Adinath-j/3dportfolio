@@ -1,7 +1,7 @@
 export const projects = [
   
   {
-    id: 4,
+    id: 1,
     title: 'KisanLog',
     tagline: 'Farm Expense & Profitability Tracker',
     description:
@@ -12,11 +12,11 @@ export const projects = [
     icon: '🌾',
     status: 'Active',
     year: '2024',
-    github: 'https://github.com/Adinath-j/KisanLogWBackend',
-    live: 'https://YOUR-KISANLOG-LIVE-LINK.com',
+    github: 'https://github.com/Adinath-j/KisanLog',
+    live: 'https://kisanlogwbackend.onrender.com',
   },
   {
-    id: 5,
+    id: 2,
     title: 'Clarify',
     tagline: 'Offline-First Productivity App',
     description:
@@ -27,11 +27,11 @@ export const projects = [
     icon: '📋',
     status: 'In Progress',
     year: '2024',
-    github: 'https://github.com/Adinath-j/YOUR-CLARIFY-REPO',
+    github: 'https://github.com/Adinath-j/Clarify',
     live: null,
   },
   {
-    id: 6,
+    id: 3,
     title: 'Employee Task Manager',
     tagline: 'Role-Based Task Management SPA',
     description:
@@ -42,11 +42,11 @@ export const projects = [
     icon: '👥',
     status: 'Complete',
     year: '2024',
-    github: 'https://github.com/Adinath-j/YOUR-EMS-REPO',
-    live: 'https://YOUR-EMS-LIVE-LINK.com',
+    github: 'https://github.com/Adinath-j/EMS-Employee-Management-System',
+    live: 'https://ems-employee-management-system-blue.vercel.app',
   },
   {
-    id: 1,
+    id: 4,
     title: 'CottonConnect',
     tagline: 'Digital Cotton Supply Chain',
     description:
@@ -59,20 +59,7 @@ export const projects = [
     year: '2024',
   },
   {
-    id: 2,
-    title: 'Farm Tracker',
-    tagline: 'Agricultural Monitoring System',
-    description:
-      'Agricultural monitoring system helping farmers track crops, irrigation schedules, soil health, and resource allocation. Provides data-driven insights to maximize yield and reduce waste.',
-    tech: ['React', 'Python', 'PostgreSQL', 'IoT'],
-    color: '#34d399',
-    glowColor: 'rgba(52,211,153,0.35)',
-    icon: '🌾',
-    status: 'Production',
-    year: '2024',
-  },
-  {
-    id: 3,
+    id: 5,
     title: 'Internet Preservation AI',
     tagline: 'AI-Powered Digital Archiving',
     description:
