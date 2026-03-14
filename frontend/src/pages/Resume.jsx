@@ -121,15 +121,6 @@ export default function Resume() {
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Print / Save as PDF */}
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => window.print()}
-              className="font-mono text-xs px-3 sm:px-4 py-2 rounded-lg border border-white/10 text-slate-400 hover:text-white hover:border-white/20 transition-all"
-            >
-              🖨 Print
-            </motion.button>
 
             {/* Download PDF */}
             <motion.a
