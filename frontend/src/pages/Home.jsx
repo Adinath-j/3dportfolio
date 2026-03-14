@@ -220,10 +220,10 @@ function AboutSection() {
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   const stats = [
-    { label: 'Years Experience', value: '3+' },
-    { label: 'Projects Built', value: '20+' },
-    { label: 'AI Models Deployed', value: '10+' },
-    { label: 'Open Source Commits', value: '500+' },
+    { label: 'Years Experience', value: '2+' },
+    { label: 'Projects Built', value: '4+' },
+    // { label: 'AI Models Deployed', value: '+' },
+    // { label: 'Open Source Commits', value: '500+' }, 
   ]
 
   return (

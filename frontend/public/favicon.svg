@@ -1,28 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
   <defs>
-    <style>
-      rect.bg { fill: #EEEDFE; }
-      line.a, path.a { stroke: #26215C; }
-      line.j, path.j { stroke: #534AB7; }
-      @media (prefers-color-scheme: dark) {
-        rect.bg { fill: #26215C; }
-        line.a, path.a { stroke: #EEEDFE; }
-        line.j, path.j { stroke: #AFA9EC; }
-      }
-    </style>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <!-- Rounded square background -->
-  <rect class="bg" x="0" y="0" width="32" height="32" rx="7"/>
-  <!-- A: left diagonal -->
-  <line class="a" x1="4" y1="27" x2="10" y2="4" stroke-width="2.2" stroke-linecap="round"/>
-  <!-- A: right diagonal -->
-  <line class="a" x1="10" y1="4" x2="16" y2="25" stroke-width="2.2" stroke-linecap="round"/>
-  <!-- A: crossbar -->
-  <line class="a" x1="6" y1="18" x2="14" y2="18" stroke-width="1.6" stroke-linecap="round"/>
-  <!-- J: top bar -->
-  <line class="j" x1="15" y1="4" x2="27" y2="4" stroke-width="2.2" stroke-linecap="round"/>
-  <!-- J: vertical stem -->
-  <line class="j" x1="25" y1="4" x2="25" y2="23" stroke-width="2.2" stroke-linecap="round"/>
-  <!-- J: bottom curve -->
-  <path class="j" d="M25 23 Q25 29 19 29 Q14 29 13 25" fill="none" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="32" height="32" rx="7" fill="#040B1A"/>
+
+  <!-- Stars -->
+  <circle cx="4"  cy="4"  r="0.6" fill="#E1F5EE" opacity="0.8"/>
+  <circle cx="27" cy="5"  r="0.5" fill="#9FE1CB" opacity="0.7"/>
+  <circle cx="28" cy="26" r="0.6" fill="#ffffff"  opacity="0.6"/>
+  <circle cx="4"  cy="27" r="0.5" fill="#9FE1CB" opacity="0.6"/>
+
+  <!-- Border -->
+  <rect x="0" y="0" width="32" height="32" rx="7" fill="none" stroke="#0AFFE0" stroke-width="1" opacity="0.6"/>
+
+  <!-- Orbit dot -->
+  <circle cx="25" cy="7" r="2" fill="#0AFFE0" filter="url(#glow)"/>
+  <circle cx="25" cy="7" r="1"   fill="#ffffff"/>
+
+  <!-- AJ glow layer -->
+  <g filter="url(#glow)" opacity="0.6">
+    <line x1="4"  y1="28" x2="11" y2="4"  stroke="#0AFFE0" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="11" y1="4"  x2="18" y2="26" stroke="#0AFFE0" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="7"  y1="20" x2="16" y2="20" stroke="#0AFFE0" stroke-width="2"   stroke-linecap="round"/>
+    <line x1="17" y1="4"  x2="28" y2="4"  stroke="#0AFFE0" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="26" y1="4"  x2="26" y2="22" stroke="#0AFFE0" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M26 22 Q26 28 21 28 Q17 28 16 25" fill="none" stroke="#0AFFE0" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- AJ crisp white -->
+  <line x1="4"  y1="28" x2="11" y2="4"  stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="11" y1="4"  x2="18" y2="26" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="7"  y1="20" x2="16" y2="20" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/>
+  <line x1="17" y1="4"  x2="28" y2="4"  stroke="#CCFAF4" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="26" y1="4"  x2="26" y2="22" stroke="#CCFAF4" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M26 22 Q26 28 21 28 Q17 28 16 25" fill="none" stroke="#CCFAF4" stroke-width="1.8" stroke-linecap="round"/>
 </svg>

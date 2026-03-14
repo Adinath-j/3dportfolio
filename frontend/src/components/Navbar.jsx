@@ -54,9 +54,7 @@ export default function Navbar() {
           onClick={() => handleNav('#hero', 'Home')}
           className="flex items-center gap-2 shrink-0"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center text-white font-bold text-sm font-mono">
-            A
-          </div>
+          
           <span className="font-display font-bold text-white text-base sm:text-lg tracking-tight">
             Adinath
           </span>
