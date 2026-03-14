@@ -52,8 +52,8 @@ export const projects = [
     description:
       'A digital platform modernizing the Cotton supply chain by connecting farmers, buyers, inspectors, warehouses, and processors. Streamlines operations from farm to factory with real-time tracking and transparent marketplace.',
     tech: ['React', 'Node.js', 'MongoDB'],
-    color: '#38bdf8',
-    glowColor: 'rgba(56,189,248,0.35)',
+    color: '#f86e38',
+    glowColor: 'rgba(158, 56, 248, 0.35)',
     icon: '🌿',
     status: 'Planning',
     year: '2024',
