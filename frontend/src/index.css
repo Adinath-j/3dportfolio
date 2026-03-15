@@ -116,7 +116,32 @@
     pointer-events: none;
   }
 
-  /* Noise film-grain overlay */
+  /* ── Cursor styles ───────────────────────────────────────────────────────── */
+
+  /* Default cursor for everything */
+  * { cursor: default; }
+
+  /* Pointer — buttons, links, clickable things */
+  a, button, [role="button"],
+  label, select, summary,
+  [onClick], .cursor-pointer { cursor: pointer; }
+
+  /* Text cursor — inputs and editable content */
+  input, textarea, [contenteditable] { cursor: text; }
+
+  /* Grab — 3D canvas scenes (draggable/rotatable) */
+  .canvas-section,
+  .canvas-container { cursor: grab; }
+
+  /* Grabbing — while actively dragging */
+  .canvas-section:active,
+  .canvas-container:active { cursor: grabbing; }
+
+  /* Not allowed — disabled elements */
+  button:disabled,
+  input:disabled,
+  textarea:disabled { cursor: not-allowed; }
+
   .noise::after {
     content: '';
     position: fixed;

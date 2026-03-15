@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
+const WHATSAPP_NUMBER = '9405110632' // ← replace with your number (no + or spaces)
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hi%20Adinath%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.`
+
 const links = [
-  { label: 'Home', href: '#hero' },
-  { label: 'About', href: '#about' },
-  { label: 'Skills', href: '#skills' },
+  { label: 'Home',     href: '#hero' },
+  { label: 'About',    href: '#about' },
+  { label: 'Skills',   href: '#skills' },
   { label: 'Projects', href: '#projects' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Contact',  href: '#contact' },
 ]
 
 export default function Navbar() {
@@ -55,9 +58,11 @@ export default function Navbar() {
           onClick={() => handleNav('#hero', 'Home')}
           className="flex items-center gap-2 shrink-0"
         >
-          
-          <span className="font-display font-bold text-white text-base sm:text-lg tracking-tighter">
-            Adinath Jadhav
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center text-white font-bold text-sm font-mono">
+            A
+          </div>
+          <span className="font-display font-bold text-white text-base sm:text-lg tracking-tight">
+            Adinath
           </span>
         </motion.button>
 
@@ -72,7 +77,7 @@ export default function Navbar() {
             >
               <button
                 onClick={() => handleNav(link.href, link.label)}
-                className={`relative px-4 py-2.5 text-sm font-medium font-mono transition-colors duration-200 rounded-lg min-w- [70px] ${
+                className={`relative px-4 py-2.5 text-sm font-medium font-mono transition-colors duration-200 rounded-lg min-w-[70px] ${
                   active === link.label
                     ? 'text-sky-400'
                     : 'text-slate-300 hover:text-white'
@@ -93,7 +98,18 @@ export default function Navbar() {
 
         {/* Desktop CTA + Mobile toggle group */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Available badge — desktop only */}
+
+          {/* Hire Me — desktop only */}
+          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="hidden md:block">
+            <Link
+              to="/hire"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-400 text-sm font-mono font-medium hover:bg-emerald-400/20 transition-colors whitespace-nowrap"
+            >
+              💼 Hire Me
+            </Link>
+          </motion.div>
+
+          {/* Resume — desktop only */}
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="hidden md:block">
             <Link
               to="/resume"
@@ -101,16 +117,19 @@ export default function Navbar() {
             >
               📄 Resume
             </Link>
-          </motion.div> 
+          </motion.div>
+
+          {/* WhatsApp — desktop only */}
           <motion.a
-            href="mailto:adinath0632@gmail.com"
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
-            className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-lg bg-sky-400/10 border border-sky-400/25 text-sky-400 text-sm font-mono font-medium hover:bg-sky-400/20 transition-colors whitespace-nowrap"
+            className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-lg bg-green-500/10 border border-green-500/25 text-green-400 text-sm font-mono font-medium hover:bg-green-500/20 transition-colors whitespace-nowrap"
           >
-            
-            <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-            Available
+            <span className="text-base">💬</span>
+            WhatsApp
           </motion.a>
 
           {/* Mobile hamburger */}
@@ -164,11 +183,15 @@ export default function Navbar() {
                 </li>
               ))}
               <li className="pt-2 border-t border-white/5 mt-1">
-                <a
-                  href="mailto:adinath0632@example.com"
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sky-400 font-mono text-base bg-sky-400/10 border border-sky-400/20"
+                <Link
+                  to="/hire"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-emerald-400 font-mono text-base bg-emerald-400/10 border border-emerald-400/20"
                 >
-                  <li>
+                  💼 Hire Me
+                </Link>
+              </li>
+              <li>
                 <Link
                   to="/resume"
                   onClick={() => setOpen(false)}
@@ -177,8 +200,15 @@ export default function Navbar() {
                   📄 Resume
                 </Link>
               </li>
-                  <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-                  Available for work
+              <li>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-green-400 font-mono text-base bg-green-500/10 border border-green-500/20"
+                >
+                  💬 WhatsApp
                 </a>
               </li>
             </ul>

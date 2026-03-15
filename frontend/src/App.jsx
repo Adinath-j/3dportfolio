@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Resume from './pages/Resume'
+import Hire from './pages/Hire'
 
 function HomeLayout() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomeLayout />} />
         <Route path="/resume" element={<Resume />} />
+        <Route path="/hire" element={<Hire />} />
       </Routes>
     </BrowserRouter>
   )
